@@ -45,7 +45,7 @@ jobs:
         host: ${{ vars.HOST }}
         username: ${{ vars.HOST_USERNAME }}
         password: ${{ secrets.HOST_PASSWORD }}
-        script: systemctl stop {{ vars.SERVICE_NAME }}
+        script: systemctl stop ${{ vars.SERVICE_NAME }}
     - name: Pull Docker images
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -59,11 +59,11 @@ jobs:
         host: ${{ vars.HOST }}
         username: ${{ vars.HOST_USERNAME }}
         password: ${{ secrets.HOST_PASSWORD }}
-        script: systemctl start {{ vars.SERVICE_NAME }}
+        script: systemctl start ${{ vars.SERVICE_NAME }}
     - name: Verify that the app is running
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ vars.HOST }}
         username: ${{ vars.HOST_USERNAME }}
         password: ${{ secrets.HOST_PASSWORD }}
-        script: systemctl is-active {{ vars.SERVICE_NAME }}
+        script: systemctl is-active ${{ vars.SERVICE_NAME }}
