@@ -1,0 +1,5 @@
+﻿services:
+  app:
+    image: avangardum/training_social_media
+    ports:
+      - 127.0.0.1:5002:80
