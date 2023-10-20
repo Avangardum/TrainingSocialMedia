@@ -1,7 +1,13 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
+COPY TrainingSocialMedia.sln .
+COPY Server/TrainingSocialMedia.Server.csproj Server/
+COPY Client/TrainingSocialMedia.Client.csproj Client/
+COPY Shared/TrainingSocialMedia.Shared.csproj Shared/
+COPY UnitTests/TrainingSocialMedia.UnitTests.csproj UnitTests/
+RUN dotnet restore
 COPY . .
-RUN dotnet publish -c Release -p:UseAppHost=false --warnaserror
+RUN dotnet publish -c Release -p:UseAppHost=false --warnaserror --no-restore
 RUN dotnet test
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
