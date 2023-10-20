@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
 
+throw new Exception("Oh no! An error occurred! :(");
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
