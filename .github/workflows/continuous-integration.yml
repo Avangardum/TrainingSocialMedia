@@ -1,4 +1,4 @@
-name: Build
+name: Continuous integration
 
 on:
   pull_request:
@@ -13,4 +13,4 @@ jobs:
     - name: Check out
       uses: actions/checkout@v3
     - name: Build
-      run: docker build -t training_social_media .
+      run: docker build . -t ${{ vars.DOCKER_IMAGE_TAG }}
