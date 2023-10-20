@@ -1,10 +1,6 @@
 name: Continuous deployment
 
-on:
-  workflow_dispatch:
-    branches: [ "development" ]
-  push:
-    branches: [ "main" ]
+on: workflow_dispatch
 
 jobs:
 
