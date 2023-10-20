@@ -1,6 +1,8 @@
 name: Continuous deployment
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ "main", "actions-test" ]
 
 jobs:
 
