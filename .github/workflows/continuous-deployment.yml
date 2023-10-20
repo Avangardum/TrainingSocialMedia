@@ -52,7 +52,7 @@ jobs:
         host: ${{ vars.HOST }}
         username: ${{ vars.HOST_USERNAME }}
         password: ${{ secrets.HOST_PASSWORD }}
-        script: docker compose pull --file ${{ vars.APP_HOST_PATH }}/docker-compose.yml
+        script: docker compose --file ${{ vars.APP_HOST_PATH }}/docker-compose.yml pull
     - name: Start the app
       uses: appleboy/ssh-action@v1.0.0
       with:
