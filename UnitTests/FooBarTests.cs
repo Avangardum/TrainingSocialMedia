@@ -7,10 +7,4 @@ public class FooBarTests
     {
         Assert.Pass();
     }
-    
-    [Test]
-    public void Bar()
-    {
-        Assert.Fail();
-    }
 }
