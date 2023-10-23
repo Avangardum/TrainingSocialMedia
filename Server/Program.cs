@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.Server.Data;
+using Microsoft.AspNetCore.Identity;
 
 // Create the builder
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
         mySqlOptions.CommandTimeout(10);
     });
 });
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TrainingSocialMediaDbContext>();
 
 // Build the app
 var app = builder.Build();
