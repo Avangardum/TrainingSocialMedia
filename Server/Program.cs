@@ -9,17 +9,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-var dbPassword = builder.Configuration["DB_PASSWORD"];
-if (string.IsNullOrEmpty(dbPassword))
-    throw new Exception("DB password is not set");
-var dbConnectionString = $"server=db;uid=root;pwd={dbPassword};database=TrainingSocialMedia";
-builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
+if (builder.Environment.IsDevelopment())
 {
-    options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString), mySqlOptions =>
+    builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
     {
-        mySqlOptions.CommandTimeout(10);
+        options.UseSqlite("Data Source=/DevelopmentDatabases/TrainingSocialMedia.db");
     });
-});
+}
+else
+{
+    var dbPassword = builder.Configuration["DB_PASSWORD"];
+    if (string.IsNullOrEmpty(dbPassword))
+        throw new Exception("DB password is not set");
+    var dbConnectionString = $"server=db;uid=root;pwd={dbPassword};database=TrainingSocialMedia";
+    builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
+    {
+        options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString),
+            mySqlOptions => { mySqlOptions.CommandTimeout(10); });
+    });
+}
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TrainingSocialMediaDbContext>();
 
@@ -27,9 +35,15 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 var app = builder.Build();
 
 // Migrate the database
-using (var dbContext = app.Services.GetRequiredService<TrainingSocialMediaDbContext>())
+using (var scope = app.Services.CreateScope())
 {
-    dbContext.Database.Migrate();
+    using (var dbContext = scope.ServiceProvider.GetRequiredService<TrainingSocialMediaDbContext>())
+    {
+        if (dbContext.Database.GetPendingMigrations().Any())
+        {
+            dbContext.Database.Migrate();
+        }
+    }
 }
 
 // Configure the middleware pipeline
