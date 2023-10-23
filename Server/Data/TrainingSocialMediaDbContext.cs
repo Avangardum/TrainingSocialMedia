@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace TrainingSocialMedia.Server.Data;
 
-public class TrainingSocialMediaDbContext : DbContext
+public class TrainingSocialMediaDbContext : IdentityDbContext
 {
     public TrainingSocialMediaDbContext(DbContextOptions<TrainingSocialMediaDbContext> options) : base(options) { }
 }
