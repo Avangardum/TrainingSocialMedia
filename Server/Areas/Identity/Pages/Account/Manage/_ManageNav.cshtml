@@ -1,4 +1,3 @@
-@using TrainingSocialMedia.Server.Data
 @inject SignInManager<User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();

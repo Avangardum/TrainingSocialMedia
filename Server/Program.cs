@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.Server.Data;
+using Microsoft.AspNetCore.Identity;
 
 // Create the builder
 var builder = WebApplication.CreateBuilder(args);
