@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainingSocialMedia.Server.Data;
 
@@ -10,9 +11,11 @@ using TrainingSocialMedia.Server.Data;
 namespace TrainingSocialMedia.Server.Migrations
 {
     [DbContext(typeof(TrainingSocialMediaDbContext))]
-    partial class TrainingSocialMediaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231024080138_SpecifiedUserIdLength4")]
+    partial class SpecifiedUserIdLength4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.12");

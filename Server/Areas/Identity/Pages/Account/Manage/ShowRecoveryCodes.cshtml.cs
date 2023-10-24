@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using TrainingSocialMedia.Server.Data;
 
 namespace TrainingSocialMedia.Server.Areas.Identity.Pages.Account.Manage
 {

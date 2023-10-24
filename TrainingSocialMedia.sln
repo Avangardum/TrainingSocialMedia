@@ -31,4 +31,6 @@ Global
 		{E71D5C7F-EC50-4680-8F13-56A570B10A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E71D5C7F-EC50-4680-8F13-56A570B10A50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(RiderSharedRunConfigurations) = postSolution
+	EndGlobalSection
 EndGlobal

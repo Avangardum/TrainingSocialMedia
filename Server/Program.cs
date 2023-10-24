@@ -29,7 +29,8 @@ else
     });
 }
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TrainingSocialMediaDbContext>();
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<TrainingSocialMediaDbContext>();
 
 // Build the app
 var app = builder.Build();
