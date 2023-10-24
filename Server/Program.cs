@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.Server.Data;
-using Microsoft.AspNetCore.Identity;
 
 // Create the builder
 var builder = WebApplication.CreateBuilder(args);
@@ -9,25 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-if (builder.Environment.IsDevelopment())
+var dbServer = builder.Environment.IsDevelopment() ? "localhost" : "db";
+var dbPassword = builder.Configuration["TRAINING_SOCIAL_MEDIA_DB_PASSWORD"];
+if (string.IsNullOrEmpty(dbPassword))
+    throw new Exception("DB password is not set");
+var dbConnectionString = $"server={dbServer};uid=root;pwd={dbPassword};database=TrainingSocialMedia";
+builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
 {
-    builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
-    {
-        options.UseSqlite("Data Source=/DevelopmentDatabases/TrainingSocialMedia.db");
-    });
-}
-else
-{
-    var dbPassword = builder.Configuration["DB_PASSWORD"];
-    if (string.IsNullOrEmpty(dbPassword))
-        throw new Exception("DB password is not set");
-    var dbConnectionString = $"server=db;uid=root;pwd={dbPassword};database=TrainingSocialMedia";
-    builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
-    {
-        options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString),
-            mySqlOptions => { mySqlOptions.CommandTimeout(10); });
-    });
-}
+    options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString),
+        mySqlOptions => { mySqlOptions.CommandTimeout(10); });
+});
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<TrainingSocialMediaDbContext>();
@@ -58,7 +48,6 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseRouting();

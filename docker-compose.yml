@@ -3,7 +3,7 @@
     image: avangardum/training_social_media
     restart: always
     environment:
-      DB_PASSWORD: ${TEST_SOCIAL_MEDIA_DB_ROOT_PASSWORD}
+      TRAINING_SOCIAL_MEDIA_DB_PASSWORD: ${TRAINING_SOCIAL_MEDIA_DB_PASSWORD}
     ports:
       - 127.0.0.1:5002:80
     depends_on:
@@ -12,7 +12,7 @@
     image: mysql:8.1
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${TEST_SOCIAL_MEDIA_DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${TRAINING_SOCIAL_MEDIA_DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
 
