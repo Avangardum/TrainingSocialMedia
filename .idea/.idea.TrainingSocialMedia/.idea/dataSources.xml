@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="TrainingSocialMedia.db" uuid="9f67d3ac-0345-4daf-91fe-5e6a64d62a22">
-      <driver-ref>sqlite.xerial</driver-ref>
+    <data-source source="LOCAL" name="TrainingSocialMedia@localhost" uuid="83cd2180-2f0b-4aab-9e6e-5aa4b5887bc1">
+      <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:/DevelopmentDatabases/TrainingSocialMedia.db</jdbc-url>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/TrainingSocialMedia</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
