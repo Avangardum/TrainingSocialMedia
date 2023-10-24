@@ -20,7 +20,7 @@ builder.Services.AddDbContext<TrainingSocialMediaDbContext>(options =>
         mySqlOptions => { mySqlOptions.CommandTimeout(10); });
 });
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<TrainingSocialMediaDbContext>();
 
 // Build the app
