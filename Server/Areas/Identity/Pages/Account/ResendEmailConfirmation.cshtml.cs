@@ -5,7 +5,7 @@ namespace TrainingSocialMedia.Server.Areas.Identity.Pages.Account;
 
 public class ResendEmailConfirmationModel : PageModel
 {
-    public IActionResult OnGetAsync()
+    public IActionResult OnGet()
     {
         return NotFound();
     }
