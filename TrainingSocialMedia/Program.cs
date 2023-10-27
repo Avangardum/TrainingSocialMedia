@@ -10,10 +10,17 @@ using TrainingSocialMedia.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var dbServer = builder.Environment.IsDevelopment() ? "localhost" : "db";
+var dbPassword = builder.Configuration["TRAINING_SOCIAL_MEDIA_DB_PASSWORD"];
+if (string.IsNullOrEmpty(dbPassword))
+    throw new Exception("DB password is not set");
+var dbConnectionString = $"server={dbServer};uid=root;pwd={dbPassword};database=TrainingSocialMedia";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+{
+    options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString),
+        mySqlOptions => { mySqlOptions.CommandTimeout(10); });
+});
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -24,6 +31,18 @@ builder.Services
 builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
+
+// Migrate the database
+using (var scope = app.Services.CreateScope())
+{
+    using (var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+    {
+        if (dbContext.Database.GetPendingMigrations().Any())
+        {
+            dbContext.Database.Migrate();
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
