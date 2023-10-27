@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace TrainingSocialMedia.Data;
+namespace TrainingSocialMedia.Entities;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
@@ -10,5 +10,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
     }
     
-    public DbSet<Post> Posts { get; set; } = null!;
+    public DbSet<PostEntity> Posts { get; set; } = null!;
 }

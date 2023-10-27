@@ -1,6 +1,6 @@
-﻿namespace TrainingSocialMedia.Data;
+﻿namespace TrainingSocialMedia.Entities;
 
-public class Post
+public class PostEntity
 {
     public int Id { get; set; }
     public ApplicationUser Author { get; set; } = null!;

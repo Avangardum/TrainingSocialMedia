@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace TrainingSocialMedia.Data;
+namespace TrainingSocialMedia.Entities;
 
 public class ApplicationUser : IdentityUser
 {

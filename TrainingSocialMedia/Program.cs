@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.Areas.Identity;
-using TrainingSocialMedia.Data;
+using TrainingSocialMedia.Entities;
+using TrainingSocialMedia.Interfaces;
+using TrainingSocialMedia.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services
     .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 var app = builder.Build();
 
