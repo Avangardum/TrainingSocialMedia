@@ -1,6 +1,6 @@
-﻿<component name="ProjectRunConfigurationManager">
+<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
-    <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Server/TrainingSocialMedia.Server.csproj" />
+    <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/TrainingSocialMedia/TrainingSocialMedia.csproj" />
     <option name="LAUNCH_PROFILE_TFM" value="net7.0" />
     <option name="LAUNCH_PROFILE_NAME" value="https" />
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
