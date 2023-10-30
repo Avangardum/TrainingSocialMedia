@@ -1,14 +1,12 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.Areas.Identity;
 using TrainingSocialMedia.Entities;
 using TrainingSocialMedia.Interfaces;
 using TrainingSocialMedia.Presenters;
+using TrainingSocialMedia.Repositories;
 using TrainingSocialMedia.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,8 +31,9 @@ builder.Services.AddServerSideBlazor();
 builder.Services
     .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostPresenter, PostPresenter>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 
 var app = builder.Build();
 

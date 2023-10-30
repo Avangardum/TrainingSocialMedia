@@ -1,9 +1,8 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TrainingSocialMedia.DataTransferObjects;
 using TrainingSocialMedia.DataTransferObjects.BusinessModels;
+using TrainingSocialMedia.DataTransferObjects.DataModels;
 using TrainingSocialMedia.Entities;
 using TrainingSocialMedia.Interfaces;
 
@@ -12,17 +11,17 @@ namespace TrainingSocialMedia.Services;
 public class PostService : IPostService
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IPostRepository _postRepository;
 
     public PostService(ApplicationDbContext dbContext, IMapper mapper, UserManager<ApplicationUser> userManager, 
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor, IPostRepository postRepository)
     {
         _dbContext = dbContext;
-        _mapper = mapper;
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
+        _postRepository = postRepository;
     }
 
     public async Task<IReadOnlyList<PostBusinessModel>> GetPostsAsync()
@@ -41,11 +40,9 @@ public class PostService : IPostService
     public async Task CreatePostAsync(NewPostBusinessModel newPostBusinessModel)
     {
         var httpContext = _httpContextAccessor.HttpContext ?? throw new Exception("HttpContext not found");
-        var author = await _userManager.GetUserAsync(httpContext.User) 
-            ?? throw new Exception("User not found");
-        var postEntity = new PostEntity { Author = author, Content = newPostBusinessModel.Content };
-        await _dbContext.Posts.AddAsync(postEntity);
-        await _dbContext.SaveChangesAsync();
+        var authorId = _userManager.GetUserId(httpContext.User) ?? throw new Exception("Author id not found");
+        var newPostDataModel = new NewPostDataModel { AuthorId = authorId, Content = newPostBusinessModel.Content };
+        await _postRepository.CreatePost(newPostDataModel);
     }
 
     private PostBusinessModel PostEntityToDto(PostEntity postEntity)
