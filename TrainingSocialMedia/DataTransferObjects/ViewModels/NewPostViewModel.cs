@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrainingSocialMedia.ViewModels;
+namespace TrainingSocialMedia.DataTransferObjects.ViewModels;
 
 public class NewPostViewModel
 {

@@ -1,4 +1,5 @@
 ﻿using TrainingSocialMedia.DataTransferObjects;
+using TrainingSocialMedia.DataTransferObjects.BusinessModels;
 
 namespace TrainingSocialMedia.Interfaces;
 

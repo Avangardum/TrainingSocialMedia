@@ -1,4 +1,4 @@
-﻿namespace TrainingSocialMedia.DataTransferObjects;
+﻿namespace TrainingSocialMedia.DataTransferObjects.BusinessModels;
 
 public class NewPostBusinessModel
 {

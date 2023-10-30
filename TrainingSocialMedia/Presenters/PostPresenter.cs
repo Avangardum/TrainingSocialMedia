@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using TrainingSocialMedia.DataTransferObjects;
+using TrainingSocialMedia.DataTransferObjects.BusinessModels;
+using TrainingSocialMedia.DataTransferObjects.ViewModels;
 using TrainingSocialMedia.Interfaces;
-using TrainingSocialMedia.ViewModels;
 
 namespace TrainingSocialMedia.Presenters;
 

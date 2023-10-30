@@ -1,4 +1,4 @@
-﻿using TrainingSocialMedia.ViewModels;
+﻿using TrainingSocialMedia.DataTransferObjects.ViewModels;
 
 namespace TrainingSocialMedia.Interfaces;
 

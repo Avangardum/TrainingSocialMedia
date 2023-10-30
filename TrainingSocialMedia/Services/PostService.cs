@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.DataTransferObjects;
+using TrainingSocialMedia.DataTransferObjects.BusinessModels;
 using TrainingSocialMedia.Entities;
 using TrainingSocialMedia.Interfaces;
 
