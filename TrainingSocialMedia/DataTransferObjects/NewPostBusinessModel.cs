@@ -1,6 +1,6 @@
 ﻿namespace TrainingSocialMedia.DataTransferObjects;
 
-public class NewPostDto
+public class NewPostBusinessModel
 {
     public required string Content { get; set; }
 }

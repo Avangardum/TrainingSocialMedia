@@ -24,32 +24,32 @@ public class PostService : IPostService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<IReadOnlyList<PostDto>> GetPostsAsync()
+    public async Task<IReadOnlyList<PostBusinessModel>> GetPostsAsync()
     {
         var postEntities = await _dbContext.Posts.Include(p => p.Author).ToListAsync();
         return postEntities.Select(PostEntityToDto).ToList();
     }
 
-    public async Task<PostDto?> GetPostAsync(int id)
+    public async Task<PostBusinessModel?> GetPostAsync(int id)
     {
         var postEntity = await _dbContext.Posts.Include(p => p.Author)
             .FirstOrDefaultAsync(p => p.Id == id);
         return postEntity is not null ? PostEntityToDto(postEntity) : null;
     }
 
-    public async Task CreatePostAsync(NewPostDto newPostDto)
+    public async Task CreatePostAsync(NewPostBusinessModel newPostBusinessModel)
     {
         var httpContext = _httpContextAccessor.HttpContext ?? throw new Exception("HttpContext not found");
         var author = await _userManager.GetUserAsync(httpContext.User) 
             ?? throw new Exception("User not found");
-        var postEntity = new PostEntity { Author = author, Content = newPostDto.Content };
+        var postEntity = new PostEntity { Author = author, Content = newPostBusinessModel.Content };
         await _dbContext.Posts.AddAsync(postEntity);
         await _dbContext.SaveChangesAsync();
     }
 
-    private PostDto PostEntityToDto(PostEntity postEntity)
+    private PostBusinessModel PostEntityToDto(PostEntity postEntity)
     {
-        return new PostDto
+        return new PostBusinessModel
         {
             Id = postEntity.Id,
             AuthorUserName = postEntity.Author.UserName ?? throw new Exception("Author username not found"),

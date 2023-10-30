@@ -9,8 +9,8 @@ public class MainAutoMapperProfile : Profile
 {
     public MainAutoMapperProfile()
     {
-        CreateMap<PostEntity, PostDto>();
-        CreateMap<PostDto, PostEntity>();
-        CreateMap<NewPostViewModel, NewPostDto>();
+        CreateMap<PostEntity, PostBusinessModel>();
+        CreateMap<PostBusinessModel, PostEntity>();
+        CreateMap<NewPostViewModel, NewPostBusinessModel>();
     }
 }

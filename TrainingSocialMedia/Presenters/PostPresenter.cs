@@ -18,7 +18,7 @@ public class PostPresenter : IPostPresenter
 
     public async Task CreatePostAsync(NewPostViewModel newPostViewModel)
     {
-        var newPostDto = _mapper.Map<NewPostDto>(newPostViewModel);
+        var newPostDto = _mapper.Map<NewPostBusinessModel>(newPostViewModel);
         await _postService.CreatePostAsync(newPostDto);
     }
 }
