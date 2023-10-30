@@ -7,12 +7,10 @@
 
 @foreach (var post in _posts)
 {
-    <div class="col-4">
-        <div class="card border-dark">
-            <div class="card-body">
-                <strong>@(post.AuthorUserName):</strong>
-                <p>@post.Content</p>
-            </div>
+    <div class="card border-dark col-4 post-card">
+        <div class="card-body">
+            <strong>@(post.AuthorUserName):</strong>
+            <p>@post.Content</p>
         </div>
     </div>
 }
@@ -23,6 +21,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _posts = await PostService.GetPosts();
+        _posts = await PostService.GetPostsAsync();
     }
 }

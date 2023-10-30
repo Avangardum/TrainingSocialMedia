@@ -24,20 +24,20 @@ public class PostService : IPostService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<IReadOnlyList<PostDto>> GetPosts()
+    public async Task<IReadOnlyList<PostDto>> GetPostsAsync()
     {
         var postEntities = await _dbContext.Posts.Include(p => p.Author).ToListAsync();
         return postEntities.Select(PostEntityToDto).ToList();
     }
 
-    public async Task<PostDto?> GetPost(int id)
+    public async Task<PostDto?> GetPostAsync(int id)
     {
         var postEntity = await _dbContext.Posts.Include(p => p.Author)
             .FirstOrDefaultAsync(p => p.Id == id);
         return postEntity is not null ? PostEntityToDto(postEntity) : null;
     }
 
-    public async Task CreatePost(NewPostDto newPostDto)
+    public async Task CreatePostAsync(NewPostDto newPostDto)
     {
         var httpContext = _httpContextAccessor.HttpContext ?? throw new Exception("HttpContext not found");
         var author = await _userManager.GetUserAsync(httpContext.User) 

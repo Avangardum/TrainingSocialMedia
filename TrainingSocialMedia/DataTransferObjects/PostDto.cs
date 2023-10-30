@@ -1,6 +1,4 @@
-﻿using TrainingSocialMedia.Entities;
-
-namespace TrainingSocialMedia.DataTransferObjects;
+﻿namespace TrainingSocialMedia.DataTransferObjects;
 
 public class PostDto
 {

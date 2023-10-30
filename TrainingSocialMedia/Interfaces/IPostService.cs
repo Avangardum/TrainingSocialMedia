@@ -4,7 +4,7 @@ namespace TrainingSocialMedia.Interfaces;
 
 public interface IPostService
 {
-    Task<IReadOnlyList<PostDto>> GetPosts();
-    Task<PostDto?> GetPost(int id);
-    Task CreatePost(NewPostDto newPostDto);
+    Task<IReadOnlyList<PostDto>> GetPostsAsync();
+    Task<PostDto?> GetPostAsync(int id);
+    Task CreatePostAsync(NewPostDto newPostDto);
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.Areas.Identity;
 using TrainingSocialMedia.Entities;
 using TrainingSocialMedia.Interfaces;
+using TrainingSocialMedia.Presenters;
 using TrainingSocialMedia.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,8 +32,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services
     .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IPostPresenter, PostPresenter>();
 
 var app = builder.Build();
 
