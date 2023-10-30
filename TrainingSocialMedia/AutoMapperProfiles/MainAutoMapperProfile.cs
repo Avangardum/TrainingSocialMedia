@@ -9,5 +9,6 @@ public class MainAutoMapperProfile : Profile
     public MainAutoMapperProfile()
     {
         CreateMap<PostEntity, PostDto>();
+        CreateMap<PostDto, PostEntity>();
     }
 }

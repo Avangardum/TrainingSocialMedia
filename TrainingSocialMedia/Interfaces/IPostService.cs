@@ -6,4 +6,5 @@ public interface IPostService
 {
     Task<IReadOnlyList<PostDto>> GetPosts();
     Task<PostDto?> GetPost(int id);
+    Task CreatePost(NewPostDto newPostDto);
 }

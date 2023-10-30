@@ -3,6 +3,6 @@
 public class PostEntity
 {
     public int Id { get; set; }
-    public ApplicationUser Author { get; set; } = null!;
-    public string Content { get; set; } = null!;
+    public required ApplicationUser Author { get; set; }
+    public required string Content { get; set; }
 }
