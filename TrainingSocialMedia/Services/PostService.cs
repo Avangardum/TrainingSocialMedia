@@ -27,14 +27,14 @@ public class PostService : IPostService
     public async Task<IReadOnlyList<PostDto>> GetPosts()
     {
         var postEntities = await _dbContext.Posts.Include(p => p.Author).ToListAsync();
-        return postEntities.Select(postEntity => _mapper.Map<PostDto>(postEntity)).ToList();
+        return postEntities.Select(PostEntityToDto).ToList();
     }
 
     public async Task<PostDto?> GetPost(int id)
     {
         var postEntity = await _dbContext.Posts.Include(p => p.Author)
             .FirstOrDefaultAsync(p => p.Id == id);
-        return postEntity is not null ? _mapper.Map<PostDto>(postEntity) : null;
+        return postEntity is not null ? PostEntityToDto(postEntity) : null;
     }
 
     public async Task CreatePost(NewPostDto newPostDto)
@@ -45,5 +45,15 @@ public class PostService : IPostService
         var postEntity = new PostEntity { Author = author, Content = newPostDto.Content };
         await _dbContext.Posts.AddAsync(postEntity);
         await _dbContext.SaveChangesAsync();
+    }
+
+    private PostDto PostEntityToDto(PostEntity postEntity)
+    {
+        return new PostDto
+        {
+            Id = postEntity.Id,
+            AuthorUserName = postEntity.Author.UserName ?? throw new Exception("Author username not found"),
+            Content = postEntity.Content
+        };
     }
 }
