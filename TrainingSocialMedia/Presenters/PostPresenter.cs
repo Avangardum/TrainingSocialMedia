@@ -19,7 +19,19 @@ public class PostPresenter : IPostPresenter
 
     public async Task CreatePostAsync(NewPostViewModel newPostViewModel)
     {
-        var newPostDto = _mapper.Map<NewPostBusinessModel>(newPostViewModel);
-        await _postService.CreatePostAsync(newPostDto);
+        var newPostBusinessModel = _mapper.Map<NewPostBusinessModel>(newPostViewModel);
+        await _postService.CreatePostAsync(newPostBusinessModel);
+    }
+
+    public async Task<IReadOnlyList<PostViewModel>> GetPostsAsync()
+    {
+        var postBusinessModels = await _postService.GetPostsAsync();
+        var postViewModels = postBusinessModels.Select(PostBusinessToViewModel).ToList();
+        return postViewModels;
+    }
+
+    private PostViewModel PostBusinessToViewModel(PostBusinessModel postBusinessModel)
+    {
+        return _mapper.Map<PostViewModel>(postBusinessModel);
     }
 }

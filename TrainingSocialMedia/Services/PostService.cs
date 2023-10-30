@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.DataTransferObjects.BusinessModels;
 using TrainingSocialMedia.DataTransferObjects.DataModels;
 using TrainingSocialMedia.Entities;
@@ -10,33 +9,27 @@ namespace TrainingSocialMedia.Services;
 
 public class PostService : IPostService
 {
-    private readonly ApplicationDbContext _dbContext;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPostRepository _postRepository;
+    private readonly IMapper _mapper;
 
-    public PostService(ApplicationDbContext dbContext, IMapper mapper, UserManager<ApplicationUser> userManager, 
-        IHttpContextAccessor httpContextAccessor, IPostRepository postRepository)
+    public PostService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, 
+        IPostRepository postRepository, IMapper mapper)
     {
-        _dbContext = dbContext;
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
         _postRepository = postRepository;
+        _mapper = mapper;
     }
 
     public async Task<IReadOnlyList<PostBusinessModel>> GetPostsAsync()
     {
-        var postEntities = await _dbContext.Posts.Include(p => p.Author).ToListAsync();
-        return postEntities.Select(PostEntityToDto).ToList();
+        var postDataModels = await _postRepository.GetPosts();
+        var postBusinessModels = postDataModels.Select(PostDataToBusinessModel).ToList();
+        return postBusinessModels;
     }
-
-    public async Task<PostBusinessModel?> GetPostAsync(int id)
-    {
-        var postEntity = await _dbContext.Posts.Include(p => p.Author)
-            .FirstOrDefaultAsync(p => p.Id == id);
-        return postEntity is not null ? PostEntityToDto(postEntity) : null;
-    }
-
+    
     public async Task CreatePostAsync(NewPostBusinessModel newPostBusinessModel)
     {
         var httpContext = _httpContextAccessor.HttpContext ?? throw new Exception("HttpContext not found");
@@ -45,13 +38,8 @@ public class PostService : IPostService
         await _postRepository.CreatePost(newPostDataModel);
     }
 
-    private PostBusinessModel PostEntityToDto(PostEntity postEntity)
+    private PostBusinessModel PostDataToBusinessModel(PostDataModel postDataModel)
     {
-        return new PostBusinessModel
-        {
-            Id = postEntity.Id,
-            AuthorUserName = postEntity.Author.UserName ?? throw new Exception("Author username not found"),
-            Content = postEntity.Content
-        };
+        return _mapper.Map<PostBusinessModel>(postDataModel);
     }
 }

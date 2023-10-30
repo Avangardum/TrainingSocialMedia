@@ -1,6 +1,5 @@
 ﻿@page "/"
-@using TrainingSocialMedia.DataTransferObjects.BusinessModels
-@inject IPostService PostService
+@inject IPostPresenter PostPresenter
 
 @foreach (var post in _posts)
 {
@@ -14,10 +13,10 @@
 
 @code
 {
-    private IReadOnlyList<PostBusinessModel> _posts = new List<PostBusinessModel>();
+    private IReadOnlyList<PostViewModel> _posts = new List<PostViewModel>();
 
     protected override async Task OnInitializedAsync()
     {
-        _posts = await PostService.GetPostsAsync();
+        _posts = await PostPresenter.GetPostsAsync();
     }
 }

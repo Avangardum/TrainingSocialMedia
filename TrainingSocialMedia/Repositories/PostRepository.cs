@@ -21,4 +21,15 @@ public class PostRepository : IPostRepository
         _dbContext.Posts.Add(postEntity);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<IReadOnlyList<PostDataModel>> GetPosts()
+    {
+        var postDataModels = await _dbContext.Posts
+            .Include(p => p.Author)
+            .Select(pe => 
+                new PostDataModel { Id = pe.Id, AuthorUserName = pe.Author.UserName!, Content = pe.Content })
+            .OrderByDescending(pdm => pdm.Id)
+            .ToListAsync();
+        return postDataModels;
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TrainingSocialMedia.DataTransferObjects;
 using TrainingSocialMedia.DataTransferObjects.BusinessModels;
+using TrainingSocialMedia.DataTransferObjects.DataModels;
 using TrainingSocialMedia.DataTransferObjects.ViewModels;
 using TrainingSocialMedia.Entities;
 
@@ -10,8 +11,8 @@ public class MainAutoMapperProfile : Profile
 {
     public MainAutoMapperProfile()
     {
-        CreateMap<PostEntity, PostBusinessModel>();
-        CreateMap<PostBusinessModel, PostEntity>();
+        CreateMap<PostDataModel, PostBusinessModel>();
+        CreateMap<PostBusinessModel, PostViewModel>();
         CreateMap<NewPostViewModel, NewPostBusinessModel>();
     }
 }
