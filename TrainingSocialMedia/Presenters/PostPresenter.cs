@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using TrainingSocialMedia.DataTransferObjects;
+﻿using System.Collections.Immutable;
+using AutoMapper;
 using TrainingSocialMedia.DataTransferObjects.BusinessModels;
 using TrainingSocialMedia.DataTransferObjects.ViewModels;
 using TrainingSocialMedia.Interfaces;
@@ -8,8 +8,19 @@ namespace TrainingSocialMedia.Presenters;
 
 public class PostPresenter : IPostPresenter
 {
-    private IPostService _postService;
-    private IMapper _mapper;
+    private static readonly ImmutableList<string> PostCardBorderCssClasses = ImmutableList.Create(
+        "border-primary",
+        "border-secondary",
+        "border-success",
+        "border-danger",
+        "border-warning",
+        "border-info",
+        "border-light",
+        "border-dark"
+    );
+    
+    private readonly IPostService _postService;
+    private readonly IMapper _mapper;
 
     public PostPresenter(IPostService postService, IMapper mapper)
     {
@@ -32,6 +43,16 @@ public class PostPresenter : IPostPresenter
 
     private PostViewModel PostBusinessToViewModel(PostBusinessModel postBusinessModel)
     {
-        return _mapper.Map<PostViewModel>(postBusinessModel);
+        var viewModel = _mapper.Map<PostViewModel>(postBusinessModel);
+        viewModel.PostCardBorderCssClass = GetPostCardBorderCssClass(postBusinessModel);
+        return viewModel;
+    }
+
+    private string GetPostCardBorderCssClass(PostBusinessModel postBusinessModel)
+    {
+        var firstChar = postBusinessModel.Content.First();
+        var cssClassIndex = firstChar % PostCardBorderCssClasses.Count;
+        var cssClass = PostCardBorderCssClasses[cssClassIndex];
+        return cssClass;
     }
 }

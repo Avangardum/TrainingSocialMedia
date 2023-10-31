@@ -3,7 +3,7 @@
 
 @foreach (var post in _posts)
 {
-    <div class="card border-dark col-4 post-card">
+    <div class="card col-4 post-card @post.PostCardBorderCssClass">
         <div class="card-body">
             <strong>@(post.AuthorUserName):</strong>
             <p>@post.Content</p>
