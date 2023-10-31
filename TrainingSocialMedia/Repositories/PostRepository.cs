@@ -26,8 +26,12 @@ public class PostRepository : IPostRepository
     {
         var postDataModels = await _dbContext.Posts
             .Include(p => p.Author)
-            .Select(pe => 
-                new PostDataModel { Id = pe.Id, AuthorUserName = pe.Author.UserName!, Content = pe.Content })
+            .Select(pe =>
+                new PostDataModel
+                {
+                    Id = pe.Id, Content = pe.Content,
+                    Author = new() { Id = pe.Author.Id, UserName = pe.Author.UserName! }
+                })
             .OrderByDescending(pdm => pdm.Id)
             .ToListAsync();
         return postDataModels;

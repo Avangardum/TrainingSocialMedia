@@ -14,5 +14,6 @@ public class MainAutoMapperProfile : Profile
         CreateMap<PostDataModel, PostBusinessModel>();
         CreateMap<PostBusinessModel, PostViewModel>();
         CreateMap<NewPostViewModel, NewPostBusinessModel>();
+        CreateMap<UserEntity, UserDataModel>();
     }
 }

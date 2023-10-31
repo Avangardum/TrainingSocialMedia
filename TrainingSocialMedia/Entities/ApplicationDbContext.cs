@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TrainingSocialMedia.Entities;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<UserEntity>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

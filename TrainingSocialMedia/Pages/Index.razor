@@ -3,10 +3,15 @@
 
 @foreach (var post in _posts)
 {
-    <div class="card col-4 post-card @post.PostCardBorderCssClass">
+    <div class="card col-4 post-card border-3 @post.PostCardBorderCssClass">
         <div class="card-body">
             <strong>@(post.AuthorUserName):</strong>
             <p>@post.Content</p>
+            @if (post.IsAuthoredByCurrentUser)
+            {
+                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-danger">Delete</a>
+            }
         </div>
     </div>
 }

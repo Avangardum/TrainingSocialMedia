@@ -2,7 +2,7 @@
 
 namespace TrainingSocialMedia.Entities;
 
-public class ApplicationUser : IdentityUser
+public class UserEntity : IdentityUser
 {
     
 }
