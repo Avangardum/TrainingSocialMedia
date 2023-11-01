@@ -1,0 +1,10 @@
+﻿@page "/EditPost/{id:int}"
+@* @attribute [Authorize(Policies.IsPostAuthor)] *@
+
+<h3>Edit Post</h3>
+
+@code 
+{
+    [Parameter] 
+    public int Id { get; set; }
+}

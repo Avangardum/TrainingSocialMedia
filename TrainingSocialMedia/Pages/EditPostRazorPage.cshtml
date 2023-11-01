@@ -1,0 +1,7 @@
+﻿@page "/EditPostRazorPage/{id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using TrainingSocialMedia.Constants
+@model TrainingSocialMedia.Pages.EditPostRazorPage
+@attribute [Authorize(Policies.IsPostAuthor)]
+
+<h3>Edit Post</h3>
