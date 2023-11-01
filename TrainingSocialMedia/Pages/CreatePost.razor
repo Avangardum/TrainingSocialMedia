@@ -1,0 +1,28 @@
+﻿@page "/CreatePost"
+@attribute [Authorize]
+@inject IPostPresenter PostPresenter
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Post</PageTitle>
+<h3>Create Post</h3>
+
+<EditForm Model="_newPostViewModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <div>
+        <InputTextArea @bind-Value="_newPostViewModel.Content" cols="80" rows="10"></InputTextArea>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</EditForm>
+
+@code 
+{
+    private NewPostViewModel _newPostViewModel = new();
+
+    private async Task OnValidSubmit()
+    {
+        await PostPresenter.CreatePostAsync(_newPostViewModel);
+        NavigationManager.NavigateTo(Urls.Index);
+    }
+}
