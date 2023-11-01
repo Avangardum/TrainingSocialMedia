@@ -1,27 +1,84 @@
 ﻿@page "/"
 @inject IPostPresenter PostPresenter
 
+<!-- Posts -->
 @foreach (var post in _posts)
 {
+    var postId = post.Id;
     <div class="card col-4 post-card border-3 @post.PostCardBorderCssClass">
         <div class="card-body">
             <strong>@(post.AuthorUserName):</strong>
             <p>@post.Content</p>
             @if (post.IsAuthoredByCurrentUser)
             {
-                <a href="#" class="btn btn-primary">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <button type="button" class="btn btn-primary">Edit</button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#confirmPostDeletionModal" @onclick="() => OnDeletePostClick(postId)">
+                    Delete
+                </button>
             }
         </div>
     </div>
 }
 
+<!-- Confirm post deletion modal -->
+<div class="modal fade" id="confirmPostDeletionModal" tabindex="-1" aria-labelledby="confirmPostDeletionModalLabel" 
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmPostDeletionModalLabel">Confirm post deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this post?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" 
+                    @onclick="OnConfirmPostDeletionClick">Delete post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @code
 {
-    private IReadOnlyList<PostViewModel> _posts = new List<PostViewModel>();
+    private static readonly TimeSpan UpdatePostsInterval = TimeSpan.FromSeconds(10); 
+    
+    private List<PostViewModel> _posts = new();
+    private int _postToDeleteId;
 
     protected override async Task OnInitializedAsync()
     {
-        _posts = await PostPresenter.GetPostsAsync();
+        await UpdatePosts();
+        _ = UpdatePostsLoop();
+    }
+
+    private async Task UpdatePostsLoop()
+    {
+        while (true)
+        {
+            await Task.Delay(UpdatePostsInterval);
+            await UpdatePosts();
+        }
+    // ReSharper disable once FunctionNeverReturns
+    }
+    
+    private async Task UpdatePosts()
+    {
+        _posts = (await PostPresenter.GetPostsAsync()).ToList();
+        StateHasChanged();
+    }
+
+    private void OnDeletePostClick(int postId)
+    {
+        _postToDeleteId = postId;
+    }
+
+    private async Task OnConfirmPostDeletionClick()
+    {
+        await PostPresenter.DeletePost(_postToDeleteId);
+        _posts.RemoveAll(p => p.Id == _postToDeleteId);
     }
 }

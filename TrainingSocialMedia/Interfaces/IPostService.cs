@@ -6,4 +6,5 @@ public interface IPostService
 {
     Task<IReadOnlyList<PostBusinessModel>> GetPostsAsync();
     Task CreatePostAsync(NewPostBusinessModel newPostBusinessModel);
+    Task DeletePost(int postId);
 }

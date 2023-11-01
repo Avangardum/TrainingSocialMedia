@@ -51,4 +51,14 @@ public class PostRepository : IPostRepository
             .SingleOrDefaultAsync(pe => pe.Id == postId);
         return postDataModel;
     }
+
+    public async Task DeletePost(int postId)
+    {
+        var postEntity = await _dbContext.Posts.SingleOrDefaultAsync(pe => pe.Id == postId);
+        if (postEntity is not null)
+        {
+            _dbContext.Posts.Remove(postEntity);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 }

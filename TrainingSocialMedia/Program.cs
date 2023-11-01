@@ -1,8 +1,12 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.Areas.Identity;
+using TrainingSocialMedia.Authorization.Handlers;
+using TrainingSocialMedia.Authorization.Requirements;
+using TrainingSocialMedia.Constants;
 using TrainingSocialMedia.Entities;
 using TrainingSocialMedia.Interfaces;
 using TrainingSocialMedia.Presenters;
@@ -22,10 +26,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString),
         mySqlOptions => { mySqlOptions.CommandTimeout(10); });
 });
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddDefaultIdentity<UserEntity>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policies.IsPostAuthor, policy =>
+    {
+        policy.Requirements.Add(new IsPostAuthorRequirement());
+    });
+});
+builder.Services.AddScoped<IAuthorizationHandler, IsPostAuthorHandler>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services

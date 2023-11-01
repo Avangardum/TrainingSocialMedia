@@ -41,6 +41,11 @@ public class PostPresenter : IPostPresenter
         return postViewModels;
     }
 
+    public async Task DeletePost(int postId)
+    {
+        await _postService.DeletePost(postId);
+    }
+
     private PostViewModel PostBusinessToViewModel(PostBusinessModel postBusinessModel)
     {
         var viewModel = _mapper.Map<PostViewModel>(postBusinessModel);
