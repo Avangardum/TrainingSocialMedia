@@ -21,7 +21,7 @@ var dbPassword = builder.Configuration["TRAINING_SOCIAL_MEDIA_DB_PASSWORD"];
 if (string.IsNullOrEmpty(dbPassword))
     throw new Exception("DB password is not set");
 var dbConnectionString = $"server={dbServer};uid=root;pwd={dbPassword};database=TrainingSocialMedia";
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 {
     options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString),
         mySqlOptions => { mySqlOptions.CommandTimeout(10); });

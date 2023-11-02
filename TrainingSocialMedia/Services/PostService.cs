@@ -34,7 +34,7 @@ public class PostService : IPostService
 
     public async Task<IReadOnlyList<PostBusinessModel>> GetPostsAsync()
     {
-        var postDataModels = await _postRepository.GetPosts();
+        var postDataModels = await _postRepository.GetPostsAsync();
         var postBusinessModels = new List<PostBusinessModel>();
         foreach (var postDataModel in postDataModels)
         {
@@ -49,13 +49,13 @@ public class PostService : IPostService
         var currentUser = await _userRepository.GetCurrentUserAsync();
         Debug.Assert(currentUser is not null);
         var newPostDataModel = new NewPostDataModel { AuthorId = currentUser.Id, Content = newPostBusinessModel.Content };
-        await _postRepository.CreatePost(newPostDataModel);
+        await _postRepository.CreatePostAsync(newPostDataModel);
     }
 
     public async Task DeletePost(int postId)
     {
         await VerifyCurrentUserIsPostAuthor(postId);
-        await _postRepository.DeletePost(postId);
+        await _postRepository.DeletePostAsync(postId);
     }
 
     private async Task<PostBusinessModel> PostDataToBusinessModelAsync(PostDataModel postDataModel)
