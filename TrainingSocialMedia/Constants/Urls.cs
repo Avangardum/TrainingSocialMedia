@@ -1,6 +1,6 @@
 ﻿namespace TrainingSocialMedia.Constants;
 
-public class Urls
+public static class Urls
 {
     public const string Index = "/";
     public const string CreatePost = "/CreatePost";
