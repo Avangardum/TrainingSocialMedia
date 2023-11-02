@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using TrainingSocialMedia.DataTransferObjects.DataModels;
 using TrainingSocialMedia.Entities;
 using TrainingSocialMedia.Interfaces;
@@ -16,49 +15,53 @@ public class PostRepository : IPostRepository
             Content = pe.Content,
             Author = new() { Id = pe.Author.Id, UserName = pe.Author.UserName! }
         };
+    
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
 
-    private readonly ApplicationDbContext _dbContext;
-
-    public PostRepository(ApplicationDbContext dbContext)
+    public PostRepository(IDbContextFactory<ApplicationDbContext> dbContextFactory)
     {
-        _dbContext = dbContext;
+        _dbContextFactory = dbContextFactory;
     }
-
-    private IIncludableQueryable<PostEntity, UserEntity> PostsWithAuthors =>
-        _dbContext.Posts.Include(p => p.Author);
-
-    public async Task CreatePost(NewPostDataModel newPostDataModel)
+    
+    public async Task CreatePostAsync(NewPostDataModel newPostDataModel)
     {
-        var author = await _dbContext.Users.FirstAsync(u => u.Id == newPostDataModel.AuthorId);
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var author = await dbContext.Users.FirstAsync(u => u.Id == newPostDataModel.AuthorId);
         var postEntity = new PostEntity { Author = author, Content = newPostDataModel.Content };
-        _dbContext.Posts.Add(postEntity);
-        await _dbContext.SaveChangesAsync();
+        dbContext.Posts.Add(postEntity);
+        await dbContext.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyList<PostDataModel>> GetPosts()
+    public async Task<IReadOnlyList<PostDataModel>> GetPostsAsync()
     {
-        var postDataModels = await PostsWithAuthors
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var postDataModels = await GetPostsWithAuthors(dbContext)
             .Select(PostEntityToDataModelExpression)
             .OrderByDescending(pdm => pdm.Id)
             .ToListAsync();
         return postDataModels;
     }
 
-    public async Task<PostDataModel?> GetPost(int postId)
+    public async Task<PostDataModel?> GetPostAsync(int postId)
     {
-        var postDataModel = await PostsWithAuthors
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var postDataModel = await GetPostsWithAuthors(dbContext)
             .Select(PostEntityToDataModelExpression)
             .SingleOrDefaultAsync(pe => pe.Id == postId);
         return postDataModel;
     }
 
-    public async Task DeletePost(int postId)
+    public async Task DeletePostAsync(int postId)
     {
-        var postEntity = await _dbContext.Posts.SingleOrDefaultAsync(pe => pe.Id == postId);
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var postEntity = await dbContext.Posts.SingleOrDefaultAsync(pe => pe.Id == postId);
         if (postEntity is not null)
         {
-            _dbContext.Posts.Remove(postEntity);
-            await _dbContext.SaveChangesAsync();
+            dbContext.Posts.Remove(postEntity);
+            await dbContext.SaveChangesAsync();
         }
     }
+
+    private IQueryable<PostEntity> GetPostsWithAuthors(ApplicationDbContext dbContext) =>
+        dbContext.Posts.Include(p => p.Author);
 }

@@ -4,8 +4,8 @@ namespace TrainingSocialMedia.Interfaces;
 
 public interface IPostRepository
 {
-    Task CreatePost(NewPostDataModel newPostDataModel);
-    Task<IReadOnlyList<PostDataModel>> GetPosts();
-    Task<PostDataModel?> GetPost(int postId);
-    Task DeletePost(int postId);
+    Task CreatePostAsync(NewPostDataModel newPostDataModel);
+    Task<IReadOnlyList<PostDataModel>> GetPostsAsync();
+    Task<PostDataModel?> GetPostAsync(int postId);
+    Task DeletePostAsync(int postId);
 }
