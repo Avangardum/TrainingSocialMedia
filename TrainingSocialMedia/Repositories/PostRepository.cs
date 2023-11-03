@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using TrainingSocialMedia.DataTransferObjects.DataModels;
 using TrainingSocialMedia.Entities;
@@ -49,6 +50,15 @@ public class PostRepository : IPostRepository
             .Select(PostEntityToDataModelExpression)
             .SingleOrDefaultAsync(pe => pe.Id == postId);
         return postDataModel;
+    }
+
+    public async Task EditPostAsync(PostDataModel postDataModel)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var postEntity = await dbContext.Posts.SingleOrDefaultAsync(pe => pe.Id == postDataModel.Id);
+        Debug.Assert(postEntity is not null);
+        postEntity.Content = postDataModel.Content;
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task DeletePostAsync(int postId)

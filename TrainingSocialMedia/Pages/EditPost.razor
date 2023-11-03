@@ -1,10 +1,41 @@
 ﻿@page "/EditPost/{id:int}"
+@using System.Diagnostics
 @attribute [Authorize(Policies.IsPostAuthor)]
+@inject IPostPresenter PostPresenter
+@inject NavigationManager NavigationManager
 
 <h3>Edit Post</h3>
 
+@if (_postViewModel is not null)
+{
+    <EditForm Model="_postViewModel" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator/>
+        <div>
+            <InputTextArea @bind-Value="_postViewModel.Content" cols="80" rows="10"></InputTextArea>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Edit</button>
+        </div>
+    </EditForm>
+}
+
 @code 
 {
+    private PostViewModel? _postViewModel;
+    
     [Parameter] 
     public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _postViewModel = await PostPresenter.GetPostAsync(Id);
+        Debug.Assert(_postViewModel is not null);
+    }
+
+    private async Task OnValidSubmit()
+    {
+        Debug.Assert(_postViewModel is not null);
+        await PostPresenter.EditPostAsync(_postViewModel);
+        NavigationManager.NavigateTo(Urls.Index);
+    }
 }

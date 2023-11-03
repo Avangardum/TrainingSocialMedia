@@ -4,7 +4,9 @@ namespace TrainingSocialMedia.Interfaces;
 
 public interface IPostPresenter
 {
-    Task CreatePostAsync(NewPostViewModel newPostViewModel);
     Task<IReadOnlyList<PostViewModel>> GetPostsAsync();
+    Task<PostViewModel?> GetPostAsync(int id);
+    Task CreatePostAsync(NewPostViewModel newPostViewModel);
+    Task EditPostAsync(PostViewModel postViewModel);
     Task DeletePost(int postId);
 }
