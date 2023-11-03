@@ -9,7 +9,7 @@
 <EditForm Model="_newPostViewModel" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
     <div>
-        <InputTextArea @bind-Value="_newPostViewModel.Content" cols="80" rows="10"></InputTextArea>
+        <InputTextArea @bind-Value="_newPostViewModel.Content" cols="80" rows="10" class="post-content-input"/>
     </div>
     <div>
         <button type="submit" class="btn btn-primary">Create</button>

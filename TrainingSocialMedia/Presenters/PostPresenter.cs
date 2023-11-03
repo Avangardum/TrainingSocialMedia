@@ -75,6 +75,7 @@ public class PostPresenter : IPostPresenter
 
     private string GetPostCardBorderCssClass(PostBusinessModel postBusinessModel)
     {
+        Debug.Assert(postBusinessModel.Content.Length > 0);
         var firstChar = postBusinessModel.Content.First();
         var cssClassIndex = firstChar % PostCardBorderCssClasses.Count;
         var cssClass = PostCardBorderCssClasses[cssClassIndex];
