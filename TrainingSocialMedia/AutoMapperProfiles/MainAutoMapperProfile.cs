@@ -11,9 +11,10 @@ public class MainAutoMapperProfile : Profile
 {
     public MainAutoMapperProfile()
     {
-        CreateMap<PostDataModel, PostBusinessModel>();
-        CreateMap<PostBusinessModel, PostViewModel>();
+        CreateMap<PostDataModel, PostBusinessModel>().ReverseMap();
+        CreateMap<PostBusinessModel, PostViewModel>().ReverseMap();
         CreateMap<NewPostViewModel, NewPostBusinessModel>();
         CreateMap<UserEntity, UserDataModel>();
+        CreateMap<UserDataModel, UserBusinessModel>().ReverseMap();
     }
 }

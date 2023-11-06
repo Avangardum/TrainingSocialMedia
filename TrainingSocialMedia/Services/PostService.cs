@@ -43,13 +43,27 @@ public class PostService : IPostService
         }
         return postBusinessModels;
     }
-    
+
+    public async Task<PostBusinessModel?> GetPostAsync(int id)
+    {
+        var postDataModel = await _postRepository.GetPostAsync(id);
+        var postBusinessModel = postDataModel is not null ? await PostDataToBusinessModelAsync(postDataModel) : null;
+        return postBusinessModel;
+    }
+
     public async Task CreatePostAsync(NewPostBusinessModel newPostBusinessModel)
     {
         var currentUser = await _userRepository.GetCurrentUserAsync();
         Debug.Assert(currentUser is not null);
         var newPostDataModel = new NewPostDataModel { AuthorId = currentUser.Id, Content = newPostBusinessModel.Content };
         await _postRepository.CreatePostAsync(newPostDataModel);
+    }
+
+    public async Task EditPostAsync(PostBusinessModel postBusinessModel)
+    {
+        await VerifyCurrentUserIsPostAuthor(postBusinessModel.Id);
+        var postDataModel = PostBusinessToDataModel(postBusinessModel);
+        await _postRepository.EditPostAsync(postDataModel);
     }
 
     public async Task DeletePost(int postId)
@@ -62,8 +76,14 @@ public class PostService : IPostService
     {
         await LoadCurrentUserIfNotLoaded();
         var businessModel = _mapper.Map<PostBusinessModel>(postDataModel);
-        businessModel.IsAuthoredByCurrentUser = _currentUser is not null && _currentUser.Id == postDataModel.Author.Id;
+        businessModel.IsAuthoredByCurrentUser = _currentUser is not null && _currentUser.Id == postDataModel.Author?.Id;
         return businessModel;
+    }
+    
+    private PostDataModel PostBusinessToDataModel(PostBusinessModel postBusinessModel)
+    {
+        var postDataModel = _mapper.Map<PostDataModel>(postBusinessModel);
+        return postDataModel;
     }
 
     private async Task LoadCurrentUserIfNotLoaded()

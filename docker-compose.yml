@@ -6,6 +6,8 @@
       TRAINING_SOCIAL_MEDIA_DB_PASSWORD: ${TRAINING_SOCIAL_MEDIA_DB_PASSWORD}
     ports:
       - 127.0.0.1:5002:80
+    volumes:
+      - app_dataprotectionkeys:/root/.aspnet/DataProtection-Keys
     depends_on:
       - db
   db:
@@ -17,4 +19,5 @@
       - db_data:/var/lib/mysql
 
 volumes:
+  app_dataprotectionkeys:
   db_data:

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using AutoMapper;
 using TrainingSocialMedia.DataTransferObjects.BusinessModels;
 using TrainingSocialMedia.DataTransferObjects.ViewModels;
@@ -28,17 +29,30 @@ public class PostPresenter : IPostPresenter
         _mapper = mapper;
     }
 
+    public async Task<IReadOnlyList<PostViewModel>> GetPostsAsync()
+    {
+        var postBusinessModels = await _postService.GetPostsAsync();
+        var postViewModels = postBusinessModels.Select(PostBusinessToViewModel).ToList();
+        return postViewModels;
+    }
+
+    public async Task<PostViewModel?> GetPostAsync(int id)
+    {
+        var postBusinessModel = await _postService.GetPostAsync(id);
+        var postViewModel = postBusinessModel is not null ? PostBusinessToViewModel(postBusinessModel) : null;
+        return postViewModel;
+    }
+
     public async Task CreatePostAsync(NewPostViewModel newPostViewModel)
     {
         var newPostBusinessModel = _mapper.Map<NewPostBusinessModel>(newPostViewModel);
         await _postService.CreatePostAsync(newPostBusinessModel);
     }
 
-    public async Task<IReadOnlyList<PostViewModel>> GetPostsAsync()
+    public async Task EditPostAsync(PostViewModel postViewModel)
     {
-        var postBusinessModels = await _postService.GetPostsAsync();
-        var postViewModels = postBusinessModels.Select(PostBusinessToViewModel).ToList();
-        return postViewModels;
+        var postBusinessModel = PostViewToBusinessModel(postViewModel);
+        await _postService.EditPostAsync(postBusinessModel);
     }
 
     public async Task DeletePost(int postId)
@@ -50,11 +64,19 @@ public class PostPresenter : IPostPresenter
     {
         var viewModel = _mapper.Map<PostViewModel>(postBusinessModel);
         viewModel.PostCardBorderCssClass = GetPostCardBorderCssClass(postBusinessModel);
+        viewModel.AuthorUserName = postBusinessModel.Author?.Username ?? "Deleted user"; 
         return viewModel;
+    }
+    
+    private PostBusinessModel PostViewToBusinessModel(PostViewModel postViewModel)
+    {
+        var businessModel = _mapper.Map<PostBusinessModel>(postViewModel);
+        return businessModel;
     }
 
     private string GetPostCardBorderCssClass(PostBusinessModel postBusinessModel)
     {
+        Debug.Assert(postBusinessModel.Content.Length > 0);
         var firstChar = postBusinessModel.Content.First();
         var cssClassIndex = firstChar % PostCardBorderCssClasses.Count;
         var cssClass = PostCardBorderCssClasses[cssClassIndex];

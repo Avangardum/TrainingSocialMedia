@@ -70,3 +70,8 @@ a, .btn-link {
 .post-card {
     margin-bottom: 1rem;
 }
+
+.post-content-input {
+    margin-bottom: 0.3rem;
+    padding: 0.4rem;
+}

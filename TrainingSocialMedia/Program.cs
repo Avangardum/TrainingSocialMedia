@@ -1,8 +1,13 @@
+using System.Diagnostics;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using TrainingSocialMedia.Areas.Identity;
 using TrainingSocialMedia.Authorization.Handlers;
 using TrainingSocialMedia.Authorization.Requirements;
@@ -16,18 +21,22 @@ using TrainingSocialMedia.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Database
 var dbServer = builder.Environment.IsDevelopment() ? "localhost" : "db";
 var dbPassword = builder.Configuration["TRAINING_SOCIAL_MEDIA_DB_PASSWORD"];
 if (string.IsNullOrEmpty(dbPassword))
     throw new Exception("DB password is not set");
 var dbConnectionString = $"server={dbServer};uid=root;pwd={dbPassword};database=TrainingSocialMedia";
+var dbTimeout = TimeSpan.FromSeconds(10);
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 {
-    options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString),
-        mySqlOptions => { mySqlOptions.CommandTimeout(10); });
+    options.UseMySql(dbConnectionString, GetMySqlServerVersion(dbConnectionString),
+        mySqlOptions => { mySqlOptions.CommandTimeout((int)dbTimeout.TotalSeconds); });
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Authentication and authorization
 builder.Services.AddDefaultIdentity<UserEntity>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAuthorization(options =>
@@ -39,8 +48,19 @@ builder.Services.AddAuthorization(options =>
 });
 builder.Services.AddScoped<IAuthorizationHandler, IsPostAuthorHandler>();
 
+// Data protection
+builder.Services.AddDataProtection()
+    .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration
+    {
+        EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+        ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+    });
+
+// Other built-in services
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+// Custom services
 builder.Services
     .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -88,3 +108,22 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+
+
+ServerVersion GetMySqlServerVersion(string connectionString)
+{
+    var stopwatch = Stopwatch.StartNew();
+
+    while (true)
+    {
+        try
+        {
+            return ServerVersion.AutoDetect(connectionString);
+        }
+        catch (MySqlException)
+        {
+            if (stopwatch.Elapsed > dbTimeout) throw;
+        }
+    }
+}
