@@ -76,7 +76,7 @@ public class PostService : IPostService
     {
         await LoadCurrentUserIfNotLoaded();
         var businessModel = _mapper.Map<PostBusinessModel>(postDataModel);
-        businessModel.IsAuthoredByCurrentUser = _currentUser is not null && _currentUser.Id == postDataModel.Author.Id;
+        businessModel.IsAuthoredByCurrentUser = _currentUser is not null && _currentUser.Id == postDataModel.Author?.Id;
         return businessModel;
     }
     

@@ -14,7 +14,7 @@ public class PostRepository : IPostRepository
         {
             Id = pe.Id, 
             Content = pe.Content,
-            Author = new() { Id = pe.Author.Id, UserName = pe.Author.UserName! }
+            Author = pe.Author != null ? new UserDataModel { Id = pe.Author.Id, UserName = pe.Author.UserName! } : null
         };
     
     private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;

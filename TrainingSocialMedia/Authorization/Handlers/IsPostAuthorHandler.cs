@@ -28,7 +28,7 @@ public class IsPostAuthorHandler : AuthorizationHandler<IsPostAuthorRequirement>
 
         var post = await _postRepository.GetPostAsync(postId);
         var currentUser = await _userRepository.GetCurrentUserAsync();
-        if (post is not null && currentUser is not null && post.Author.Id == currentUser.Id) 
+        if (post is not null && currentUser is not null && post.Author?.Id == currentUser.Id) 
             context.Succeed(requirement);
     }
 }
