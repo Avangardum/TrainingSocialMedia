@@ -11,4 +11,14 @@ public class ApplicationDbContext : IdentityDbContext<UserEntity>
     }
     
     public DbSet<PostEntity> Posts { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<UserEntity>()
+            .HasMany(u => u.Posts)
+            .WithOne(p => p.Author)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
 }

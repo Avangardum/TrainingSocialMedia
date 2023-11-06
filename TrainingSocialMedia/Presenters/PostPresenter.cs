@@ -64,6 +64,7 @@ public class PostPresenter : IPostPresenter
     {
         var viewModel = _mapper.Map<PostViewModel>(postBusinessModel);
         viewModel.PostCardBorderCssClass = GetPostCardBorderCssClass(postBusinessModel);
+        viewModel.AuthorUserName = postBusinessModel.Author?.Username ?? "Deleted user"; 
         return viewModel;
     }
     

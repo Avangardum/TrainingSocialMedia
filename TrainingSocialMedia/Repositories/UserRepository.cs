@@ -33,6 +33,7 @@ public class UserRepository : IUserRepository
             .Where(ue => ue.Id == userId)
             .Select(ue => new UserDataModel { Id = ue.Id, UserName = ue.UserName! })
             .SingleOrDefaultAsync();
+        
         return userDataModel;
     }
 }

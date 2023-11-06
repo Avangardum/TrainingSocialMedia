@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainingSocialMedia.Entities;
 
@@ -10,9 +11,11 @@ using TrainingSocialMedia.Entities;
 namespace TrainingSocialMedia.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231106115517_AddedPostsToUser")]
+    partial class AddedPostsToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,8 +293,7 @@ namespace TrainingSocialMedia.Migrations
                 {
                     b.HasOne("TrainingSocialMedia.Entities.UserEntity", "Author")
                         .WithMany("Posts")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
                 });
